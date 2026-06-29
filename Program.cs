@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Reflection;
 using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.Interaction;
 using static local.Utils.Player;
@@ -46,6 +47,28 @@ foreach(var _event in events)
 }
 file.Write(newFilename, true);
 
-string wavname = ToMp3(newFilename);
-PlayWav(wavname);
+var assembly = Assembly.GetExecutingAssembly();
+var types = assembly.GetTypes();
+
+foreach(Type type in types)
+{
+    Console.WriteLine(type.FullName);
+    var properties = type.GetMethods();
+    if(properties.Length == 0)
+        Console.WriteLine("    no methods found");
+    
+    foreach(var property in properties)
+    {
+        Console.WriteLine($"    {property.Name}:");
+        var parameters = property.GetParameters();
+        foreach(var parameter in parameters)
+        {
+            Console.WriteLine($"\t{parameter.ParameterType} {parameter.Name}");
+        }
+    }
+}
+
+
+// string wavname = ToMp3(newFilename);
+// PlayWav(wavname);
 // thats the funniest tinkering project ive ever made xD
